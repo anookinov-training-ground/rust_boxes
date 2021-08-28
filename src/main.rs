@@ -103,4 +103,7 @@ fn main() {
     }
     println!("count after c goes out of scope = {}", Rc::strong_count(&a));
     println!("{:#?}", b);
+
+    // let x = 5;
+    // let y = &mut x; // cannot borrow immutable value mutably
 }
