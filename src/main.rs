@@ -35,6 +35,8 @@ enum Message {
 
 use crate::List::{Cons, Nil};
 use crate::RcList::{RcCons, RcNil};
+use crate::RcRefCellList::{RcRefCellCons, RcRefCellNil};
+use std::cell::RefCell;
 use std::rc::Rc;
 
 struct CustomSmartPointer {
@@ -51,6 +53,12 @@ impl Drop for CustomSmartPointer {
 enum RcList {
     RcCons(i32, Rc<RcList>),
     RcNil,
+}
+
+#[derive(Debug)]
+enum RcRefCellList {
+    RcRefCellCons(Rc<RefCell<i32>>, Rc<RcRefCellList>), // Cell<T> is similar to RefCell<T> except the value is copied instead of giving references to the inner value
+    RcRefCellNil,
 }
 
 fn main() {
@@ -106,4 +114,16 @@ fn main() {
 
     // let x = 5;
     // let y = &mut x; // cannot borrow immutable value mutably
+    let value = Rc::new(RefCell::new(5));
+
+    let a = Rc::new(RcRefCellCons(Rc::clone(&value), Rc::new(RcRefCellNil)));
+
+    let b = RcRefCellCons(Rc::new(RefCell::new(3)), Rc::clone(&a));
+    let c = RcRefCellCons(Rc::new(RefCell::new(4)), Rc::clone(&a));
+    
+    *value.borrow_mut() += 10;
+
+    println!("a after = {:?}", a);
+    println!("b after = {:?}", b);
+    println!("c after = {:?}", c);
 }
