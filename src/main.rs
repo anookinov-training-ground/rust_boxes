@@ -57,4 +57,9 @@ fn main() {
     let m = MyBox::new(String::from("Rust"));
     hello(&m); // &MyBox<String> -> &String -> &str
     hello(&(*m)[..]); // if Rust didn't implement deref coercion (Deref::deref is called multiple times)
+
+    // Rust deref coercion cases:
+    // 1) From &T to &U when T: Deref<Target=U>
+    // 2) From &mut T to &mut U when T: DerefMut<Target=U>
+    // 3) From &mut T to &U when T: Deref<Target=U> | reverse is not possible
 }
